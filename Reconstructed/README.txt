@@ -1,0 +1,1 @@
+This folder contains reconstructed original morphology files using Python based on previous morphology files written in HOC. In addition, rest of the network and simulation files are also adjusted that are suitable for later DC stimulation.
