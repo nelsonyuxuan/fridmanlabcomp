@@ -1,1 +1,23 @@
-This is an README file.
+XX - STANDS FOR ABBREVIATION OF EACH TYPE OF NEURONS (PYR, SST, VIP, PV)
+
+mod folder
+  - Contains necessary mechansisms files for this project
+  
+biophys_HL23XX.hoc
+  - These HOC files contain functions that autoset the biophysical parameters for a specific type of neuron. 
+  
+HL23XX.swc
+  - Morphology files for each type of neuron.
+
+HL23XX.py 
+  - Files that create a specific type of neuron and apply extracellular field on it (radial and tangential)
+
+NeuronTemplate.hoc
+  - HOC template that creates different types of neurons based on the input swc file. 
+
+XX.py
+  - Test the generating of different types of neurons (with current clamp implemented). It is used to validate the single neuron response to depolarizing and hyperpolarizing stimulation current.
+  
+XX_netpyne.py
+  - Files that define a Python class of a specific type of neurons. Only used for NetPyNE network import.
+ 
