@@ -15,6 +15,12 @@ h.load_file('PYRtemplate.hoc')
 
 netParams = specs.NetParams()  # object of class NetParams to store the network parameters
 
+netParams.sizeX = 500.0 # x-dimension (horizontal length) size in um
+netParams.sizeY = 500.0 # y-dimension (vertical height or cortical depth) size in um
+netParams.sizeZ = 950.0 # z-dimension (horizontal depth) size in um
+netParams.propVelocity = 100.0 # propagation velocity (um/ms)
+netParams.probLengthConst = 100.0 # length constant for conn probability (um)
+
 # SUCCESSFUL import using the HOC template directly
 # cellRule = netParams.importCellParams(
 #         label='PYR',
@@ -65,8 +71,9 @@ netParams.popParams['post'] = {'cellType': 'PYR', 'numCells': 1}
 
 #==========================SYNAPTIC PARAMETERS (TEST COMPLETED)==============================================
 # Assume that the synaptic mechanisms defined by Exp2Syn is AMPA, which mainly contributes to the generation of EPSPs
-netParams.synMechParams['excite_pyr_pre'] = {'mod': 'Exp2Syn', 'tau1': 0.3, 'tau2': 3, 'e': 0}  # excitatory synaptic mechanism
-netParams.synMechParams['inhibit_sst_pre'] = {'mod': 'Exp2Syn', 'tau1': 1, 'tau2': 10, 'e': -80}  # inbitary synaptic mechanism
+netParams.synMechParams['NMDA'] = {'mod': 'Exp2Syn', 'tau1': 2, 'tau2': 65, 'e': 0}  # excitatory synaptic mechanism, NMDA
+netParams.synMechParams['AMPA'] = {'mod': 'Exp2Syn', 'tau1': 0.3, 'tau2': 3, 'e': 0}  # excitatory synaptic mechanism, AMPA
+netParams.synMechParams['GABA'] = {'mod': 'Exp2Syn', 'tau1': 1, 'tau2': 10, 'e': -80}  # inbitary synaptic mechanism, GABA
 #========================================================================
 
 
@@ -74,9 +81,9 @@ netParams.synMechParams['inhibit_sst_pre'] = {'mod': 'Exp2Syn', 'tau1': 1, 'tau2
 # Insert a current clamp to generate initial spike in the PYR cell.
 netParams.stimSourceParams['CurrentClamp'] = {
     'type': 'IClamp',
-    'amp': 1,  # amplitude of current, in nA
-    'dur': 600,  # duration of current, in ms
-    'delay': 50  # delay before current onset, in ms
+    'amp': 0.5,  # amplitude of current, in nA
+    'dur': 1000,  # duration of current, in ms
+    'delay': 30  # delay before current onset, in ms
 }
 
 netParams.stimTargetParams['IClamp->PYR'] = {
@@ -85,6 +92,7 @@ netParams.stimTargetParams['IClamp->PYR'] = {
     'sec': 'soma_0',
     'loc': 0.5  # location of the stimulation
 }
+
 #========================================================================
 
 
@@ -93,22 +101,28 @@ netParams.stimTargetParams['IClamp->PYR'] = {
 netParams.connParams['PYR->SST'] = {
     'preConds': {'pop': 'pre'},
     'postConds': {'pop': 'sst'},
-    'weight': 0.01,  # Not really sure about the weight parameter values used for the parameters, waiting for adjustment. It seems like increasing the weight value will decrease the amplitude of the EPSPs
-    'delay': 10, # Millisecond delay between when the pre-synaptic neuron fires and when that signal affects the post-synaptic neuron  
-    'synMech': 'excite_pyr_pre',
+    'weight': 0.38e-4,  # Not really sure about the weight parameter values used for the parameters, waiting for adjustment. It seems like increasing the weight value will decrease the amplitude of the EPSPs
+    # 'weight': '0.005*post_ynorm',   # proportional to the cortical depth of cell
+    # 'delay': 0.1, # Millisecond delay between when the pre-synaptic neuron fires and when that signal affects the post-synaptic neuron  
+    'delay': 'dist_3D/propVelocity',    # transmission delay (ms) = distance / propagation velocity
+    'synMech': ['AMPA', 'NMDA'],
     'sec': 'dend', # section of the postsynaptic cell to connect to 
-    'synsPerConn': 25  
+    'synsPerConn': 8,  
+    # 'probability': 0.19
 }
 
 # Inhibitory synapses (TEST COMPLETED)
 netParams.connParams['SST->PYR'] = {
     'preConds': {'pop': 'sst'},
     'postConds': {'pop': 'post'},
-    'weight': 0.01,  # Not really sure about the weight parameter values used for the parameters, waiting for adjustment
-    'delay': 1, # Millisecond delay between when the pre-synaptic neuron fires and when that signal affects the post-synaptic neuron  
-    'synMech': 'inhibit_sst_pre',
+    'weight': 1.24e-4,  # Not really sure about the weight parameter values used for the parameters, waiting for adjustment
+    # 'weight': '0.005*post_ynorm',   # proportional to the cortical depth of cell
+    # 'delay': 10, # Millisecond delay between when the pre-synaptic neuron fires and when that signal affects the post-synaptic neuron  
+    'delay': 'dist_3D/propVelocity',    # transmission delay (ms) = distance / propagation velocity
+    'synMech': 'GABA',
     'sec': 'apical', # sections of the postsynaptic cell to connect to 
-    'synsPerConn': 25 
+    'synsPerConn': 12, 
+    # 'probability': 0.19
 }
 #========================================================================
 
@@ -133,7 +147,8 @@ simConfig.filename = 'Disynaptic_Inhibition_LOOP_MODEL'  # Set data output locat
 # simConfig.saveFig = '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData'  # Set plot output location (NOT WORKING)
 simConfig.analysis['plotRaster'] = {'saveFig': True}                  # Plot a raster"F""
 simConfig.analysis['plot2Dnet'] = {'saveFig': True}                   # plot 2D cell positions and connections
-simConfig.analysis['plotTraces'] = {'include': [('pre', 0), ('sst', 0), ('post', 0)], 'saveFig': True}  # Plot recorded traces for this list of cells
+simConfig.analysis['plotTraces'] = {'include': [('pre', 0), ('sst', 0), ('post', 0)], 'oneFigPer':'trace','saveFig': True}  # Plot recorded traces for this list of cells
+# simConfig.analysis['plotTraces'] = {'include': [('pre', 0), ('sst', 0), ('post', 0)],'saveFig': True}  # Plot recorded traces for this list of cells
 
 # Create network and run simulation
 sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
