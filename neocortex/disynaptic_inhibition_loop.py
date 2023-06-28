@@ -83,9 +83,7 @@ netParams.stimSourceParams['CurrentClamp'] = {
     'type': 'IClamp',
     'amp': 0.5,  # amplitude of current, in nA
     'dur': 1000,  # duration of current, in ms
-    'delay': 30  # delay before current onset, in ms
 }
-
 netParams.stimTargetParams['IClamp->PYR'] = {
     'source': 'CurrentClamp',
     'conds': {'pop': 'pre'},
@@ -98,6 +96,24 @@ netParams.stimTargetParams['IClamp->PYR'] = {
 
 #==========================CONNECTION PARAMETERS==============================================
 # Excitatary synapses (TEST COMPLETED)
+
+# Setting up excitatory synapses connection independently with different delay parameters
+# Number of connections created
+# n_c = 1
+
+# for i in range(n_c):
+
+#     delay = 50 + i*10
+
+#     netParams.connParams[f'PYR->SST_{i}'] = {
+#         'preConds': {'pop': 'pre'},
+#         'postConds': {'pop': 'sst'},
+#         'weight': 0.0001,  # Not really sure about the weight parameter values used for the parameters, waiting for adjustment. It seems like increasing the weight value will decrease the amplitude of the EPSPs
+#         'delay': delay, # Millisecond delay between when the pre-synaptic neuron fires and when that signal affects the post-synaptic neuron  
+#         'synMech': 'excite_pyr_pre',
+#         'sec': 'dend', # section of the postsynaptic cell to connect to 
+#         'synsPerConn': 1
+#     }
 netParams.connParams['PYR->SST'] = {
     'preConds': {'pop': 'pre'},
     'postConds': {'pop': 'sst'},
@@ -129,11 +145,13 @@ netParams.connParams['SST->PYR'] = {
 #==========================STIMULATION PARAMETERS==============================================
 # Set up simulation configuration
 simConfig = specs.SimConfig()  
-simConfig.duration = 1.0*1e3  # Duration of the simulation, in ms
+simConfig.duration = 1*1e3  # Duration of the simulation, in ms
 simConfig.dt = 0.025  # Internal integration timestep to use
 simConfig.verbose = False  # Show detailed messages
 
-# Record traces
+# Setting up the hParams
+simConfig.hParams = {'celsius': 37, 'v_init': -80}  # Set celsius temp and starting v
+
 # simConfig.recordTraces = {
 #     'V_soma_pyr_pre': {'sec': 'soma_0','var': 'v', 'conds': {'pop':'pre', 'cellList': [0]}},
 #     'V_soma_sst': {'sec': 'soma_0', 'var': 'v', 'conds': {'pop':'sst', 'cellList': [0]}},
@@ -150,9 +168,23 @@ simConfig.analysis['plot2Dnet'] = {'saveFig': True}                   # plot 2D 
 simConfig.analysis['plotTraces'] = {'include': [('pre', 0), ('sst', 0), ('post', 0)], 'oneFigPer':'trace','saveFig': True}  # Plot recorded traces for this list of cells
 # simConfig.analysis['plotTraces'] = {'include': [('pre', 0), ('sst', 0), ('post', 0)],'saveFig': True}  # Plot recorded traces for this list of cells
 
-# Create network and run simulation
+
+# Trace files
+# simConfig.analysis['plotTraces'] = {'include': [('pre',0)], 'saveFig': '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_0', 'saveData': '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_0.pkl'}  # Plot recorded traces for this list of cells'}
+# sim.analysis.plotTraces()
+
+# simConfig.analysis['plotTraces'] = {'include': [('sst',0)], 'saveFig': '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_1', 'saveData': '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_1.pkl'}  # Plot recorded traces for this list of cells'}
+
+# simConfig.analysis['plotTraces'] = {'include': [('post',0)], 'saveFig': '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_2', 'saveData': '/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_2.pkl'}  # Plot recorded traces for this list of cells'}
+
+simConfig.savePickle = True
+# Create network and run simulationå
 sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
 #========================================================================
+
+# # Plot and save traces
+# for i, cell in enumerate([('pre', 0), ('sst', 0), ('post', 0)]):
+#     sim.analysis.plotTraces(include=[cell], saveFig=f'/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_{i}.png', saveData=f'/Users/nelsonwu/Library/CloudStorage/OneDrive-Personal/FridmanLab/Computational_Project/neocortex_ABAN/FigureAndData/V_trace_{i}.pkl')
 
 
 # #==========================TEST CODE of LOADING BIOPHYSICAL PARAMETERS==============================================
