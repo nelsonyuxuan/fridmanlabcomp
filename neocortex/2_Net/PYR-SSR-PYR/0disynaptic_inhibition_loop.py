@@ -133,8 +133,8 @@ netParams.connParams['SST->PYR'] = {
     'delay': 'dist_3D/propVelocity',    # transmission delay (ms) = distance / propagation velocity
     'synMech': 'GABA',
     'sec': 'apical', # sections of the postsynaptic cell to connect to 
-    'synsPerConn': 25 
-    # 'synsPerConn': 12, 
+    # 'synsPerConn': 25 
+    'synsPerConn': 12, 
     # 'probability': 0.19
 }
 #========================================================================
