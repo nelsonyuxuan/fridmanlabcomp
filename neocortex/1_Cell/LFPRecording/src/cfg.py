@@ -8,12 +8,12 @@ cfg.verbose = False            # Show detailed messages
 cfg.recordTraces = {'V_soma':{'sec':'soma','loc':0.5,'var':'v'}, 
                     'Ina_soma':{'sec':'soma','loc':0.5,'var':'ina'}}
 cfg.recordStep = 1             # Step size in ms to save data (eg. V traces, LFP, etc)
-cfg.filename = 'cell_lfp'  # Set file output name
+cfg.filename = 'PYR_lfp'  # Set file output name
 cfg.hParams['celsius'] = 37 
 
 cfg.recordLFP = [[x, y, 35] for y in range(280, 1000, 150) for x in [30, 90]]
 
-cfg.analysis['plotTraces'] = {'include': [('E',0)],
+cfg.analysis['plotTraces'] = {'include': [('PYR',0)],
                               'oneFigPer':'cell', 
                               'overlay': False, 
                               'figSize': (5,6),

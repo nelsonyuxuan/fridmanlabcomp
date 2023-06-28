@@ -1,5 +1,6 @@
 from netpyne import sim
 from netpyne.specs import netParams
+from HL23PYR import HL23PYR
 
 cfg, netParams = sim.loadFromIndexFile('index.npjson')
 

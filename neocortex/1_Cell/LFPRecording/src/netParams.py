@@ -3,14 +3,14 @@ from netpyne import specs
 # Network parameters
 netParams = specs.NetParams()  # object of class NetParams to store the network parameters
 
-netParams.sizeX = 200 # x-dimension (horizontal length) size in um
-netParams.sizeY = 1000 # y-dimension (vertical height or cortical depth) size in um
-netParams.sizeZ = 20 # z-dimension (horizontal length) size in um
+netParams.sizeX = 500 # x-dimension (horizontal length) size in um
+netParams.sizeY = 950 # y-dimension (vertical height or cortical depth) size in um
+netParams.sizeZ = 500 # z-dimension (horizontal length) size in um
 
 ## Population parameters
 netParams.popParams['E'] = {'cellType': 'PYR', 
-                            'numCells': 1, 
-                            'yRange': [700,800]}
+                            'numCells': 1, }
+                        #     'yRange': [700,800]}
 
 ## Cell property rules
 # netParams.loadCellParamsRule(label='Erule', fileName='cells/PT5B_full_cellParams.json')
@@ -60,7 +60,7 @@ netParams.stimSourceParams['bkg'] = {'type': 'NetStim',
                                      'noise': 0.0, 
                                      'number': 1}
 netParams.stimTargetParams['bkg->all'] = {'source': 'bkg', 
-                                          'conds': {'cellType': ['E']}, 
+                                          'conds': {'cellType': ['PYR']}, 
                                           'weight': 20.0, 
                                           'sec': 'soma', 
                                           'delay': 15, 
