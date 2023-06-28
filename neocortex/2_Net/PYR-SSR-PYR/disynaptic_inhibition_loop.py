@@ -15,11 +15,11 @@ h.load_file('PYRtemplate.hoc')
 
 netParams = specs.NetParams()  # object of class NetParams to store the network parameters
 
-netParams.sizeX = 500.0 # x-dimension (horizontal length) size in um
-netParams.sizeY = 500.0 # y-dimension (vertical height or cortical depth) size in um
-netParams.sizeZ = 950.0 # z-dimension (horizontal depth) size in um
-netParams.propVelocity = 100.0 # propagation velocity (um/ms)
-netParams.probLengthConst = 100.0 # length constant for conn probability (um)
+# netParams.sizeX = 500.0 # x-dimension (horizontal length) size in um
+# netParams.sizeY = 500.0 # y-dimension (vertical height or cortical depth) size in um
+# netParams.sizeZ = 950.0 # z-dimension (horizontal depth) size in um
+# netParams.propVelocity = 100.0 # propagation velocity (um/ms)
+# netParams.probLengthConst = 100.0 # length constant for conn probability (um)
 
 # SUCCESSFUL import using the HOC template directly
 # cellRule = netParams.importCellParams(
@@ -81,9 +81,11 @@ netParams.synMechParams['GABA'] = {'mod': 'Exp2Syn', 'tau1': 1, 'tau2': 10, 'e':
 # Insert a current clamp to generate initial spike in the PYR cell.
 netParams.stimSourceParams['CurrentClamp'] = {
     'type': 'IClamp',
-    'amp': 0.5,  # amplitude of current, in nA
+    'amp': 0.3,  # amplitude of current, in nA
     'dur': 1000,  # duration of current, in ms
+    'delay': 50  # delay of current, in ms
 }
+
 netParams.stimTargetParams['IClamp->PYR'] = {
     'source': 'CurrentClamp',
     'conds': {'pop': 'pre'},
