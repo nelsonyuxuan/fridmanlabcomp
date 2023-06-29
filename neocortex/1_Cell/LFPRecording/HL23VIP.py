@@ -268,54 +268,56 @@ class HL23VIP:
             
 # Building the cell
 c = HL23VIP("HL23VIP")
+(xlo, ylo, zlo, xhi, yhi, zhi) = c.extrema()
+print(xlo, ylo, zlo, xhi, yhi, zhi)
 
-# # Set up the electrical field 
-# theta = 90 * np.pi/180
-# E = [-np.sin(theta),-np.cos(theta),0]
+# # # Set up the electrical field 
+# # theta = 90 * np.pi/180
+# # E = [-np.sin(theta),-np.cos(theta),0]
 
-# # Apply extracellular field 
-# c.apply_Eext_uniform_py(E)
+# # # Apply extracellular field 
+# # c.apply_Eext_uniform_py(E)
+
+
+# # h.finitialize(c.rest * mV)
+# # h.continuerun(200 * ms)
+
+# # c.range_depolarization()
+# # ps = h.PlotShape(False)
+# # ps.variable("v")
+# # # ps.scale(-85.5, -83.6)
+# # ps.scale(c.vmin, c.vmax)
+# # # ps.exec_menu("Shape Plot")
+# # ps.plot(pyplot, cmap=cm.jet)
+# # pyplot.show()
+
+# # START the current clamp
+# stim = h.IClamp(c.soma[0](0.5))
+# stim.delay = 100  # start of the current injection (ms)
+# stim.dur = 1200 # duration of the injection (ms)
+# stim.amp = 1 # amplitude (nA)
+# # END the current clamp
+
+# # START the recording
+# # Record time
+# t = h.Vector()
+# t.record(h._ref_t)
+
+# # Record voltage from soma
+# v = h.Vector()
+# v.record(c.soma[0](0.5)._ref_v)
+# # END the recording
 
 
 # h.finitialize(c.rest * mV)
-# h.continuerun(200 * ms)
+# h.continuerun(1500 * ms)
 
-# c.range_depolarization()
-# ps = h.PlotShape(False)
-# ps.variable("v")
-# # ps.scale(-85.5, -83.6)
-# ps.scale(c.vmin, c.vmax)
-# # ps.exec_menu("Shape Plot")
-# ps.plot(pyplot, cmap=cm.jet)
+# pyplot.plot(t, v)
+# pyplot.xlabel('Time (ms)')
+# pyplot.ylabel('Membrane potential (mV)')
 # pyplot.show()
 
-# START the current clamp
-stim = h.IClamp(c.soma[0](0.5))
-stim.delay = 100  # start of the current injection (ms)
-stim.dur = 1200 # duration of the injection (ms)
-stim.amp = 1 # amplitude (nA)
-# END the current clamp
-
-# START the recording
-# Record time
-t = h.Vector()
-t.record(h._ref_t)
-
-# Record voltage from soma
-v = h.Vector()
-v.record(c.soma[0](0.5)._ref_v)
-# END the recording
 
 
-h.finitialize(c.rest * mV)
-h.continuerun(1500 * ms)
-
-pyplot.plot(t, v)
-pyplot.xlabel('Time (ms)')
-pyplot.ylabel('Membrane potential (mV)')
-pyplot.show()
-
-
-
-input('') # Ensure the closure of the program running, press enter to terminate the run. 
+# input('') # Ensure the closure of the program running, press enter to terminate the run. 
     
